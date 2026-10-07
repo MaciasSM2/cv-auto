@@ -7,11 +7,11 @@
 
 ## 📍 1. Estado Actual del Sistema (Snapshot en Tiempo Real)
 
-* **Última Actualización:** 2026-10-06 23:55:00 (Hora Local)
-* **Fase Activa:** **Fase 7 Completada: Auditoría Documental, Parseo Resiliente y Versionado Semántico v1.1.0**
+* **Última Actualización:** 2026-10-07 01:10:00 (Hora Local)
+* **Fase Activa:** **Fase 8 Completada: Motor Heurístico, Corrección en 1 Clic, Guía Educativa y Contrato Modular v1.2.0**
 * **Repositorio Público:** [https://github.com/MaciasSM2/cv-auto](https://github.com/MaciasSM2/cv-auto)
-* **Release Oficial:** [https://github.com/MaciasSM2/cv-auto/releases/tag/v1.1.0](https://github.com/MaciasSM2/cv-auto/releases/tag/v1.1.0)
-* **Estado de Integridad:** ✅ Servidores en ejecución (`localhost:3000` y `localhost:5000`).
+* **Release Oficial:** [https://github.com/MaciasSM2/cv-auto/releases/tag/v1.2.0](https://github.com/MaciasSM2/cv-auto/releases/tag/v1.2.0)
+* **Estado de Integridad:** ✅ Servidores en ejecución (`localhost:3000` y `localhost:5000`). Builds limpios en TypeScript y Vite.
 * **Rama de Trabajo:** `main` (Raíz del proyecto: `c:\Users\Sebastian Macias\Documents\0. Programacion\CV-AUTO`)
 
 ---
@@ -29,16 +29,20 @@
 8. Robustecimiento del Extractor Heurístico (`extractor.ts`) para parsear Documentos A, B y C de manera resiliente.
 9. Corrección de duplicación de datos en el Perfil Profesional (desacople de cabecera y `cleanSummaryText`).
 10. Detección automática del motor de Google Chrome/Edge en Windows para descargas de PDF sin fallos de Chromium en caché.
-11. **Auditoría Documental y Versionado Semántico v1.1.0:**
-    - Incorporación de `docs/ANALISIS_COMPARATIVO_CVS.md` al repositorio del proyecto.
-    - Actualización de `.gitignore` para ignorar carpetas de telemetría y diagnósticos (`.tokenpulse/`).
-    - Bump coordinado de versión SemVer a `1.1.0` en `package.json`, `backend/package.json` y `frontend/package.json`.
-    - Actualización integral de `README.md` (badges, árbol de arquitectura con `docs/`, tabla de versiones SemVer).
-    - Registro de bitácora Hito 7 en `PROJECT_HISTORY.md`.
-    - Creación del tag `v1.1.0`, push a `origin main` y publicación de GitHub Release `v1.1.0`.
+11. Publicación de la versión `v1.1.0` en GitHub.
+12. **Aprobación del Plan Maestro de Cierre de Brechas y Lanzamiento de v1.2.0:**
+    - Creación del catálogo taxonómico de verbos de acción y habilidades remotas (`actionVerbsCatalog.ts`).
+    - Algoritmo de sugerencias múltiples de viñetas con fórmulas Google XYZ y STAR (`optimizer.ts`).
+    - Generador heurístico de perfil profesional de 3-4 líneas con selección de tono (`generate-summary`).
+    - Modal de sugerencias en 1 clic para viñetas (`BulletOptimizerModal.tsx`).
+    - Píldoras interactivas de habilidades remotas en la pestaña de Habilidades.
+    - Modal educativo con casos prácticos de Antes vs Después (`AtsGuideModal.tsx`).
+    - Contrato canónico de integración con plataforma padre (`CvModuleContract.ts`) y endpoint `/api/cv/export-structured`.
+    - Botón de guardado y sincronización con plataforma madre con alertas interactivas.
+    - Bump y sincronización formal a la versión `v1.2.0`.
 
 ### ⏳ Acción en Curso Inmediata (Current Step)
-* Informar al usuario sobre la culminación de la auditoría documental, actualización de bitácoras y publicación de la versión v1.1.0 en GitHub.
+* Realizar git commit, tag `v1.2.0`, git push y publicación de GitHub Release `v1.2.0`.
 
 ---
 

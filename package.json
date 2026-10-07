@@ -1,6 +1,6 @@
 {
   "name": "cv-auto",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Sistema automatizado de auditoría, optimización y generación de hojas de vida con IA para normas ATS 2026",
   "private": true,
   "workspaces": [

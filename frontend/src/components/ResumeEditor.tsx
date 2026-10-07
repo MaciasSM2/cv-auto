@@ -1,16 +1,27 @@
 import React, { useState } from 'react';
 import { ResumeData, WorkExperience } from '../types/resume';
-import { User, Briefcase, GraduationCap, Code2, Plus, Trash2, Sparkles, RefreshCw, Camera, Upload } from 'lucide-react';
+import { User, Briefcase, GraduationCap, Code2, Plus, Trash2, Sparkles, RefreshCw, Camera, Upload, Lightbulb } from 'lucide-react';
+import { BulletOptimizerModal } from './BulletOptimizerModal';
+
+const SUGGESTED_REMOTE_SKILLS = [
+  'Git / GitHub', 'Docker', 'Slack', 'Jira', 'Metodologías Ágiles (Scrum)',
+  'AWS', 'PostgreSQL', 'TypeScript', 'CI/CD Pipelines', 'Notion', 'Asana',
+  'Comunicación Asíncrona', 'REST APIs', 'Node.js', 'React'
+];
 
 interface ResumeEditorProps {
   resume: ResumeData;
   onChange: (updated: ResumeData) => void;
-  onOptimizeBullet: (bullet: string) => Promise<string>;
+  onOptimizeBullet?: (bullet: string) => Promise<string>;
 }
 
-export const ResumeEditor: React.FC<ResumeEditorProps> = ({ resume, onChange, onOptimizeBullet }) => {
+export const ResumeEditor: React.FC<ResumeEditorProps> = ({ resume, onChange }) => {
   const [activeTab, setActiveTab] = useState<'contact' | 'experience' | 'education' | 'skills'>('experience');
-  const [optimizingIndex, setOptimizingIndex] = useState<string | null>(null);
+
+  // Estados de Asistentes Heurísticos
+  const [bulletModal, setBulletModal] = useState<{ expIdx: number; bulletIdx: number; bulletText: string } | null>(null);
+  const [summaryTone, setSummaryTone] = useState<'tech' | 'executive' | 'creative' | 'general'>('tech');
+  const [generatingSummary, setGeneratingSummary] = useState(false);
 
   const handleContactChange = (field: keyof typeof resume.contact, value: string) => {
     onChange({
@@ -45,6 +56,25 @@ export const ResumeEditor: React.FC<ResumeEditorProps> = ({ resume, onChange, on
 
   const handleSummaryChange = (summary: string) => {
     onChange({ ...resume, summary });
+  };
+
+  const handleGenerateSummary = async () => {
+    setGeneratingSummary(true);
+    try {
+      const res = await fetch('/api/optimizer/generate-summary', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ resume, tone: summaryTone })
+      });
+      const data = await res.json();
+      if (data.success && data.summary) {
+        handleSummaryChange(data.summary);
+      }
+    } catch (err) {
+      console.error('Error generando resumen:', err);
+    } finally {
+      setGeneratingSummary(false);
+    }
   };
 
   const handleExperienceChange = (index: number, updatedExp: WorkExperience) => {
@@ -89,17 +119,6 @@ export const ResumeEditor: React.FC<ResumeEditorProps> = ({ resume, onChange, on
     const updatedExp = { ...resume.experience[expIdx] };
     updatedExp.bulletPoints = updatedExp.bulletPoints.filter((_, i) => i !== bulletIdx);
     handleExperienceChange(expIdx, updatedExp);
-  };
-
-  const triggerOptimizeBullet = async (expIdx: number, bulletIdx: number, currentBullet: string) => {
-    const key = `${expIdx}-${bulletIdx}`;
-    setOptimizingIndex(key);
-    try {
-      const improved = await onOptimizeBullet(currentBullet);
-      handleBulletChange(expIdx, bulletIdx, improved);
-    } finally {
-      setOptimizingIndex(null);
-    }
   };
 
   // Habilidades
@@ -315,6 +334,30 @@ export const ResumeEditor: React.FC<ResumeEditorProps> = ({ resume, onChange, on
               placeholder="Especialista con más de 5 años optimizando procesos..."
               style={{ resize: 'vertical' }}
             />
+            {/* Asistente Heurístico de Perfil Profesional */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center', marginTop: '8px' }}>
+              <select
+                value={summaryTone}
+                onChange={e => setSummaryTone(e.target.value as any)}
+                className="glass-input"
+                style={{ width: 'auto', padding: '5px 10px', fontSize: '0.78rem' }}
+              >
+                <option value="tech" style={{ background: '#0f172a' }}>💻 Perfil Tech / Remoto</option>
+                <option value="executive" style={{ background: '#0f172a' }}>👔 Perfil Ejecutivo</option>
+                <option value="creative" style={{ background: '#0f172a' }}>🎨 Perfil Creativo</option>
+                <option value="general" style={{ background: '#0f172a' }}>🌐 Perfil General</option>
+              </select>
+
+              <button
+                onClick={handleGenerateSummary}
+                disabled={generatingSummary}
+                className="btn-magic"
+                style={{ padding: '6px 14px', fontSize: '0.78rem' }}
+              >
+                {generatingSummary ? <RefreshCw size={13} className="spin" /> : <Sparkles size={13} />}
+                {generatingSummary ? 'Generando...' : '✨ Generar con Asistente ATS'}
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -389,38 +432,35 @@ export const ResumeEditor: React.FC<ResumeEditorProps> = ({ resume, onChange, on
                   </button>
                 </div>
 
-                {exp.bulletPoints.map((bullet, bIdx) => {
-                  const isOptimizing = optimizingIndex === `${expIdx}-${bIdx}`;
-                  return (
-                    <div key={bIdx} style={{ display: 'flex', gap: '6px', alignItems: 'flex-start' }}>
-                      <textarea
-                        className="glass-input"
-                        rows={2}
-                        value={bullet}
-                        onChange={e => handleBulletChange(expIdx, bIdx, e.target.value)}
-                        style={{ fontSize: '0.82rem', resize: 'vertical' }}
-                      />
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                        <button
-                          onClick={() => triggerOptimizeBullet(expIdx, bIdx, bullet)}
-                          disabled={isOptimizing}
-                          className="btn-magic"
-                          title="Optimizar con fórmula Google XYZ / Verbos fuertes"
-                        >
-                          {isOptimizing ? <RefreshCw size={12} className="spin" /> : <Sparkles size={12} />}
-                          XYZ
-                        </button>
-                        <button
-                          onClick={() => removeBullet(expIdx, bIdx)}
-                          style={{ background: 'transparent', border: 'none', color: '#64748b', cursor: 'pointer', padding: '4px' }}
-                          title="Eliminar"
-                        >
-                          <Trash2 size={14} />
-                        </button>
-                      </div>
+                {exp.bulletPoints.map((bullet, bIdx) => (
+                  <div key={bIdx} style={{ display: 'flex', gap: '6px', alignItems: 'flex-start' }}>
+                    <textarea
+                      className="glass-input"
+                      rows={2}
+                      value={bullet}
+                      onChange={e => handleBulletChange(expIdx, bIdx, e.target.value)}
+                      style={{ fontSize: '0.82rem', resize: 'vertical' }}
+                    />
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                      <button
+                        onClick={() => setBulletModal({ expIdx, bulletIdx: bIdx, bulletText: bullet })}
+                        className="btn-magic"
+                        title="Optimizar con fórmulas Google XYZ (Ver 3 opciones de impacto)"
+                        style={{ gap: '4px', padding: '5px 8px', fontSize: '0.75rem' }}
+                      >
+                        <Sparkles size={12} />
+                        XYZ
+                      </button>
+                      <button
+                        onClick={() => removeBullet(expIdx, bIdx)}
+                        style={{ background: 'transparent', border: 'none', color: '#64748b', cursor: 'pointer', padding: '4px' }}
+                        title="Eliminar"
+                      >
+                        <Trash2 size={14} />
+                      </button>
                     </div>
-                  );
-                })}
+                  </div>
+                ))}
               </div>
             </div>
           ))}
@@ -474,6 +514,47 @@ export const ResumeEditor: React.FC<ResumeEditorProps> = ({ resume, onChange, on
               </span>
             ))}
           </div>
+
+          {/* Sugerencias Rápidas de Habilidades Remotas & Tech */}
+          <div style={{
+            background: 'rgba(255, 255, 255, 0.02)',
+            border: '1px solid var(--border-color)',
+            borderRadius: 'var(--radius-md)',
+            padding: '12px',
+            marginTop: '6px'
+          }}>
+            <div style={{ fontSize: '0.72rem', color: '#94a3b8', fontWeight: 700, marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Lightbulb size={13} color="#f59e0b" /> Habilidades Clave para Trabajo Remoto & Tech (1 Clic para añadir):
+            </div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+              {SUGGESTED_REMOTE_SKILLS.filter(s => !resume.skillsList.includes(s)).map((skill, sIdx) => (
+                <button
+                  key={sIdx}
+                  onClick={() => {
+                    const updatedList = Array.from(new Set([...resume.skillsList, skill]));
+                    onChange({ ...resume, skillsList: updatedList });
+                  }}
+                  style={{
+                    background: 'rgba(59, 130, 246, 0.08)',
+                    border: '1px dashed rgba(59, 130, 246, 0.4)',
+                    color: '#cbd5e1',
+                    borderRadius: '6px',
+                    padding: '3px 8px',
+                    fontSize: '0.74rem',
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    transition: 'all 0.15s'
+                  }}
+                  title={`Añadir "${skill}" a tu lista`}
+                >
+                  <Plus size={11} color="#38bdf8" />
+                  {skill}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       )}
 
@@ -525,6 +606,19 @@ export const ResumeEditor: React.FC<ResumeEditorProps> = ({ resume, onChange, on
             </div>
           ))}
         </div>
+      )}
+      {/* Modal de Optimización de Viñetas en 1 Clic */}
+      {bulletModal && (
+        <BulletOptimizerModal
+          isOpen={true}
+          originalBullet={bulletModal.bulletText}
+          expIdx={bulletModal.expIdx}
+          bulletIdx={bulletModal.bulletIdx}
+          onApply={(expIdx, bulletIdx, improved) => {
+            handleBulletChange(expIdx, bulletIdx, improved);
+          }}
+          onClose={() => setBulletModal(null)}
+        />
       )}
     </div>
   );

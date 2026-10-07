@@ -80,3 +80,12 @@ export interface AuditResult {
 }
 
 export type TemplateType = "ats-harvard" | "modern-canva";
+
+export interface OptimizationSuggestion {
+  originalBullet: string;
+  improvedBullet: string;
+  impactFormulaApplied: 'Google XYZ' | 'STAR' | 'Action Verb Boost';
+  reason: string;
+  variantLabel: string;
+}
+

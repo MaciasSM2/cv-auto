@@ -4,6 +4,8 @@ import { Scorecard } from './components/Scorecard';
 import { LiveCvPreview } from './components/LiveCvPreview';
 import { ResumeEditor } from './components/ResumeEditor';
 import { JobMatchModal } from './components/JobMatchModal';
+import { AtsGuideModal } from './components/AtsGuideModal';
+import { notifyParentApp } from './module/CvModuleContract';
 import { 
   FileText, 
   UploadCloud, 
@@ -15,7 +17,8 @@ import {
   ChevronDown,
   FileCode,
   CheckCircle2,
-  X
+  X,
+  BookOpen
 } from 'lucide-react';
 
 const INITIAL_RESUME: ResumeData = {
@@ -85,6 +88,9 @@ export function App() {
   const [uploadSuccessMessage, setUploadSuccessMessage] = useState<string | null>(null);
   const [uploadingFile, setUploadingFile] = useState(false);
   const [isJobMatchOpen, setIsJobMatchOpen] = useState(false);
+  const [isGuideOpen, setIsGuideOpen] = useState(false);
+  const [isExportingStructured, setIsExportingStructured] = useState(false);
+  const [parentSavedMessage, setParentSavedMessage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Recalcular auditoría en cambios
@@ -223,6 +229,35 @@ export function App() {
     }
   };
 
+  // Guardar y sincronizar con la plataforma madre (Contrato Modular)
+  const handleSaveToParentPlatform = async () => {
+    setIsExportingStructured(true);
+    try {
+      const res = await fetch('/api/cv/export-structured', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ resume })
+      });
+      const data = await res.json();
+      if (data.success && data.candidatePayload) {
+        if (audit) {
+          notifyParentApp({
+            status: 'completed',
+            resume,
+            audit,
+            candidatePayload: data.candidatePayload
+          });
+        }
+        setParentSavedMessage('¡Hoja de vida validada y sincronizada con la plataforma exitosamente!');
+        setTimeout(() => setParentSavedMessage(null), 5000);
+      }
+    } catch (err) {
+      console.error('Error sincronizando datos con la plataforma:', err);
+    } finally {
+      setIsExportingStructured(false);
+    }
+  };
+
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       {/* Top Navbar */}
@@ -328,6 +363,17 @@ export function App() {
             {uploadingFile ? 'Extrayendo datos...' : 'Subir CV (PDF/Word)'}
           </button>
 
+          {/* Guía Educativa de Normas ATS 2026 */}
+          <button
+            onClick={() => setIsGuideOpen(true)}
+            className="btn-secondary"
+            style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#38bdf8' }}
+            title="Ver ejemplos prácticos de Antes vs Después para cada sección del CV"
+          >
+            <BookOpen size={16} color="#38bdf8" />
+            <span>Guía ATS (Ejemplos)</span>
+          </button>
+
           {/* Comparar con vacante */}
           <button onClick={() => setIsJobMatchOpen(true)} className="btn-secondary">
             <Target size={16} color="#06b6d4" />
@@ -431,6 +477,24 @@ export function App() {
               </div>
             )}
           </div>
+
+          {/* Botón de Sincronización con Plataforma Madre */}
+          <button
+            onClick={handleSaveToParentPlatform}
+            disabled={isExportingStructured}
+            className="btn-primary"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              background: 'linear-gradient(135deg, #059669, #10b981)',
+              boxShadow: '0 4px 14px rgba(16, 185, 129, 0.35)'
+            }}
+            title="Exportar perfil estructurado y notificar a la plataforma madre"
+          >
+            <CheckCircle2 size={16} />
+            <span>{isExportingStructured ? 'Sincronizando...' : 'Guardar en Plataforma'}</span>
+          </button>
         </div>
       </header>
 
@@ -452,6 +516,31 @@ export function App() {
           </div>
           <button
             onClick={() => setUploadSuccessMessage(null)}
+            style={{ background: 'transparent', border: 'none', color: '#34d399', cursor: 'pointer', display: 'flex' }}
+          >
+            <X size={16} />
+          </button>
+        </div>
+      )}
+
+      {/* Banner de Sincronización Exitosa con Plataforma Madre */}
+      {parentSavedMessage && (
+        <div style={{
+          background: 'rgba(5, 150, 105, 0.15)',
+          borderBottom: '1px solid rgba(16, 185, 129, 0.4)',
+          padding: '10px 24px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          fontSize: '0.85rem',
+          color: '#34d399'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <CheckCircle2 size={18} />
+            <span>{parentSavedMessage}</span>
+          </div>
+          <button
+            onClick={() => setParentSavedMessage(null)}
             style={{ background: 'transparent', border: 'none', color: '#34d399', cursor: 'pointer', display: 'flex' }}
           >
             <X size={16} />
@@ -510,6 +599,12 @@ export function App() {
         isOpen={isJobMatchOpen}
         onClose={() => setIsJobMatchOpen(false)}
         resume={resume}
+      />
+
+      {/* Modal Guía Educativa ATS 2026 */}
+      <AtsGuideModal
+        isOpen={isGuideOpen}
+        onClose={() => setIsGuideOpen(false)}
       />
     </div>
   );

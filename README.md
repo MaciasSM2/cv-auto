@@ -1,7 +1,7 @@
 # 🚀 CV-AUTO
 ### Sistema Automatizado de Auditoría, Optimización con IA y Generación de CVs (Normas ATS 2026 & LinkedIn)
 
-[![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)](https://github.com/MaciasSM2/cv-auto/releases)
+[![Version](https://img.shields.io/badge/version-1.2.0-blue.svg)](https://github.com/MaciasSM2/cv-auto/releases)
 [![Node.js](https://img.shields.io/badge/Node.js-v20%2B-green.svg)](https://nodejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-v5.8-blue.svg)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-v18.3-61dafb.svg)](https://react.dev/)
@@ -123,19 +123,21 @@ npm run dev
 
 Este proyecto adopta **Versionado Semántico (SemVer)**:
 
-* **v1.1.0 (Versión Actual):**
-  * **Motor de Parseo Purificado:** Desacople estricto de la zona de cabecera (`header`), eliminando duplicación de nombres, teléfonos, correos y URLs en el extracto profesional (`cleanSummaryText`).
-  * **Exportación PDF Nativa en Windows:** Detección automática del binario del sistema (`Google Chrome` / `Microsoft Edge`) en Puppeteer, resolviendo el error 500 al descargar PDF.
-  * **Saneamiento Multiformato Completo:** Soporte verificado para PDFs de CVwizard de múltiples páginas con pares pegados, PDFs Harvard con glifos PUA y archivos Word DOCX con citas generativas.
-  * **Informe de Diagnóstico ATS:** Inclusión del análisis comparativo forense en `docs/ANALISIS_COMPARATIVO_CVS.md`.
+* **v1.2.0 (Versión Actual):**
+  * **Motor Heurístico de Reescritura Google XYZ:** Asistente local de viñetas en 1 clic que devuelve 3 alternativas de alto impacto (Eficiencia, Calidad STAR y Liderazgo) sin coste de API externa.
+  * **Asistente de Perfil Profesional:** Generador determinista de resúmenes ejecutivos en 3-4 líneas adaptado por tono (*Tech / Remoto, Ejecutivo, Creativo, General*).
+  * **Guía Educativa Interactiva ATS 2026:** Modal interactivo con casos reales de transformación Antes vs. Después en Contacto, Resumen, Experiencia y Habilidades.
+  * **Contrato Modular para Proyecto Padre:** Especificación formal `CvModuleContract.ts`, soporte para incrustación (`embeddedMode`), eventos de finalización `notifyParentApp` y endpoint `/api/cv/export-structured`.
+  * **Píldoras de Habilidades Remotas & Tech:** Selector rápido de herramientas estándar de trabajo remoto (Docker, Git, Slack, Jira, Scrum, AWS, CI/CD).
+* **v1.1.0:**
+  * Motor de parseo purificado (desacople de cabecera y `cleanSummaryText`).
+  * Detección automática de Google Chrome nativo de Windows en Puppeteer (corrección de error 500).
+  * Auditoría forense incorporada en `docs/ANALISIS_COMPARATIVO_CVS.md`.
 * **v1.0.0:**
   * Monorepo inicial con workspaces (React 18 + Vite + Express + TS).
   * Parser multiformato inicial y Scorecard ATS 2026 de 5 dimensiones.
   * Exportación dual (PDF vectorial + Word .docx).
   * Soporte de fotografía de perfil en plantilla Canva.
-* **v1.2.0 (En Desarrollo):**
-  * Optimización de logros en masa con IA generativa (Google XYZ).
-  * Módulo interactivo de vacantes de LinkedIn con radar de keywords faltantes.
 
 ---
 

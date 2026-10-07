@@ -5,7 +5,8 @@ import dotenv from 'dotenv';
 import { ResumeData, TemplateType } from './types/resume';
 import { parsePdfBuffer, parseDocxBuffer, structureRawResumeText } from './services/parser/extractor';
 import { auditResume } from './services/scoring/scorer';
-import { rewriteBulletXYZ, analyzeJobMatch } from './services/optimizer/optimizer';
+import { rewriteBulletXYZ, suggestBulletImprovements, generateProfessionalSummary, analyzeJobMatch } from './services/optimizer/optimizer';
+import { REMOTE_COLLABORATION_SKILLS, ACTION_VERBS_TAXONOMY } from './services/optimizer/actionVerbsCatalog';
 import { generatePdfBuffer } from './services/pdf/generator';
 import { generateDocxBuffer } from './services/word/generator';
 
@@ -93,7 +94,7 @@ app.post('/api/cv/score', (req: Request, res: Response) => {
   }
 });
 
-// 4. Optimizar viñeta individual con fórmula Google XYZ / STAR
+// 4. Optimizar viñeta individual con fórmula Google XYZ / STAR (Compatibilidad)
 app.post('/api/cv/optimize-bullet', (req: Request, res: Response) => {
   try {
     const { bullet } = req.body;
@@ -104,6 +105,51 @@ app.post('/api/cv/optimize-bullet', (req: Request, res: Response) => {
 
     const suggestion = rewriteBulletXYZ(bullet);
     res.json({ success: true, suggestion });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// 4.1. Motor Heurístico: Sugerencias múltiples de viñetas con fórmulas Google XYZ / STAR
+app.post('/api/optimizer/suggest-bullets', (req: Request, res: Response) => {
+  try {
+    const { bullet, roleCategory } = req.body;
+    if (!bullet || typeof bullet !== 'string') {
+      res.status(400).json({ error: 'Se requiere el parámetro bullet como texto.' });
+      return;
+    }
+
+    const suggestions = suggestBulletImprovements(bullet, roleCategory);
+    res.json({ success: true, suggestions });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// 4.2. Motor Heurístico: Generador de Perfil Profesional ATS de 3-4 líneas
+app.post('/api/optimizer/generate-summary', (req: Request, res: Response) => {
+  try {
+    const { resume, tone = 'tech' } = req.body;
+    if (!resume) {
+      res.status(400).json({ error: 'Se requiere el objeto resume.' });
+      return;
+    }
+
+    const summary = generateProfessionalSummary(resume, tone);
+    res.json({ success: true, summary });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// 4.3. Catálogo de Habilidades Remotas y Taxonomía de Verbos de Acción
+app.get('/api/optimizer/remote-skills', (_req: Request, res: Response) => {
+  try {
+    res.json({
+      success: true,
+      remoteSkills: REMOTE_COLLABORATION_SKILLS,
+      verbTaxonomy: ACTION_VERBS_TAXONOMY
+    });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
@@ -178,6 +224,63 @@ app.post('/api/cv/export-docx', async (req: Request, res: Response): Promise<voi
   } catch (error: any) {
     console.error('Error generando Word DOCX:', error);
     res.status(500).json({ error: error.message || 'Error al compilar el documento Word' });
+  }
+});
+
+// 8. Exportar perfil normalizado y estructurado (Contrato JSON para Proyecto Padre / Base de Datos)
+app.post('/api/cv/export-structured', (req: Request, res: Response) => {
+  try {
+    const { resume } = req.body;
+    if (!resume || !resume.contact) {
+      res.status(400).json({ error: 'Datos de CV requeridos.' });
+      return;
+    }
+
+    const audit = auditResume(resume);
+    const candidatePayload = {
+      exportedAt: new Date().toISOString(),
+      candidate: {
+        fullName: resume.contact.fullName,
+        email: resume.contact.email,
+        phone: resume.contact.phone,
+        location: resume.contact.location,
+        linkedin: resume.contact.linkedin || null,
+        github: resume.contact.github || null,
+        professionalTitle: resume.contact.professionalTitle,
+        hasPhoto: Boolean(resume.contact.photoUrl)
+      },
+      profileSummary: resume.summary,
+      atsEvaluation: {
+        overallScore: audit.overallScore,
+        rating: audit.rating,
+        passedAtsChecks: audit.dimensions.atsParseability.passedChecks.length,
+        criticalFixesRemaining: audit.keyFindings.criticalFixes.length,
+        metricsRatio: audit.metricsCount,
+        hasBreakingElements: audit.hasAtsBreakingElements
+      },
+      workHistory: (resume.experience || []).map((exp: any) => ({
+        company: exp.company,
+        role: exp.position,
+        duration: `${exp.startDate} - ${exp.endDate}`,
+        achievements: exp.bulletPoints
+      })),
+      education: (resume.education || []).map((edu: any) => ({
+        institution: edu.institution,
+        degree: edu.degree,
+        graduationYear: edu.endDate
+      })),
+      skills: {
+        flatList: resume.skillsList || [],
+        categories: resume.skillCategories || []
+      }
+    };
+
+    res.json({
+      success: true,
+      candidatePayload
+    });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
   }
 });
 

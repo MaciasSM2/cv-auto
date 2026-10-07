@@ -161,6 +161,28 @@
   - **Ajustes de `.gitignore`:** Exclusión de métricas de telemetría local de TokenPulse (`.tokenpulse/`).
   - **Publicación en GitHub:** Creación del tag `v1.1.0`, push a la rama `main` y creación de la Release oficial en GitHub.
 
+---
 
-
-
+### [2026-10-07 01:05] - Hito 8: Motor Heurístico, Corrección en 1 Clic, Guía Educativa y Contrato Modular v1.2.0
+* **Solicitud y Definición Estratégica del Usuario:**
+  - Desarrollar un plan maestro integral para subsanar las falencias del proyecto y convertirlo en un módulo listo para el mercado e integrable en un sistema padre de reclutamiento o gestión de talento.
+  - Implementación con motor heurístico local (cero coste de API externa).
+  - Orientación preferente a trabajo remoto y perfiles tecnológicos, con soporte abierto y multidisciplinario.
+* **Acciones Ejecutadas:**
+  - **Plan Maestro de Cierre de Brechas:** Aprobación del documento estratégico `plan_maestro_modulo_cierre_brechas.md` con 5 fases secuenciales.
+  - **Motor Heurístico de Reescritura Google XYZ (`backend/src/services/optimizer/optimizer.ts`):**
+    - Catálogo taxonómico de verbos de acción en español e inglés clasificados por función ejecutiva (`actionVerbsCatalog.ts`).
+    - Detección de patrones pasivos (`responsable de`, `ayudé a`) y generación de 3 variantes contextuales de alto impacto (Eficiencia Google XYZ, Calidad STAR y Liderazgo/Entrega) sin dependencias de LLMs de pago.
+    - Endpoints REST `/api/optimizer/suggest-bullets` y `/api/optimizer/remote-skills`.
+  - **Asistente de Perfil Profesional (Summary Builder):**
+    - Algoritmo generador de extractos profesionales en 3-4 líneas alineados al estándar ATS 2026 con selector de tono (*Tech / Remoto, Ejecutivo, Creativo, General*).
+    - Endpoint REST `/api/optimizer/generate-summary`.
+  - **Experiencia de Usuario 1-Click Fix en Frontend (`frontend/src/components/`):**
+    - Componente interactivo `BulletOptimizerModal.tsx`: modal con previsualización de las 3 alternativas con fórmulas de impacto y botón de aplicación directa al CV en 1 clic.
+    - Píldoras interactivas de habilidades de trabajo remoto y tecnología en la pestaña de Habilidades.
+  - **Guía Educativa Interactiva de Normas ATS 2026 (`AtsGuideModal.tsx`):**
+    - Modal accesible desde la barra de navegación con casos prácticos reales de "Antes vs. Después" para Encabezado, Perfil, Experiencia y Habilidades.
+  - **Contrato de Integración con Plataforma Padre (`frontend/src/module/CvModuleContract.ts`):**
+    - Definición formal del contrato `CvModuleContract`, soporte para modo incrustado (`embeddedMode`), suscripción a eventos `postMessage` (`notifyParentApp`) y nuevo endpoint `/api/cv/export-structured` que emite un JSON estructurado listo para bases de datos de talento.
+    - Botón de "Guardar en Plataforma" en la barra de navegación con feedback visual interactivo.
+  - **Sincronización SemVer:** Bump formal a la versión `v1.2.0` en todo el monorepo.
