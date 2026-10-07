@@ -40,9 +40,10 @@
     - Contrato canónico de integración con plataforma padre (`CvModuleContract.ts`) y endpoint `/api/cv/export-structured`.
     - Botón de guardado y sincronización con plataforma madre con alertas interactivas.
     - Bump y sincronización formal a la versión `v1.2.0`.
+13. Creación del manual técnico de integración modular en `docs/GUIA_INTEGRACION_MODULO.md` y actualización del árbol arquitectónico en `README.md`.
 
 ### ⏳ Acción en Curso Inmediata (Current Step)
-* Realizar git commit, tag `v1.2.0`, git push y publicación de GitHub Release `v1.2.0`.
+* Notificar al usuario sobre la actualización documental y sincronización en GitHub.
 
 ---
 

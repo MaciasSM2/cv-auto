@@ -36,8 +36,15 @@
 
 ### 4. ⚡ Interfaz Web Interactiva en Tiempo Real
 * **Live CV Preview:** Renderizado en tiempo real sincronizado con el editor de datos.
-* **Gestor de Fotografía de Perfil:** Carga interactiva con previsualización circular, validación de tamaño y persistencia como DataURL.
-* **Banners de Feedback Instantáneo:** Notificaciones dinámicas de carga y diagnóstico de métricas.
+* **Asistente Heurístico 1-Click Fix:** Optimización de viñetas en 1 clic con 3 alternativas Google XYZ y STAR sin coste de API externa.
+* **Constructor de Perfil Profesional:** Generador determinista de resúmenes de 3-4 líneas según el tono seleccionado (*Tech/Remoto, Ejecutivo, Creativo, General*).
+* **Guía Educativa ATS 2026:** Modal con comparativas reales de "Antes vs. Después" para educar al candidato.
+* **Gestor de Fotografía de Perfil:** Carga interactiva con previsualización circular y persistencia en Base64 para el modo visual.
+
+### 5. 🔌 Arquitectura Modular Integrable (Plataformas Padre)
+* **Contrato Canónico (`CvModuleContract.ts`):** Listo para incrustar como módulo de admisión vía `iframe` (`?embedded=true`) con comunicación reactiva mediante `window.postMessage`.
+* **Exportación Estructurada para Base de Datos:** Endpoint `POST /api/cv/export-structured` que emite el perfil normalizado con calificación ATS.
+* **Guía Técnica de Integración:** Documentación completa paso a paso en [docs/GUIA_INTEGRACION_MODULO.md](docs/GUIA_INTEGRACION_MODULO.md).
 
 ---
 
@@ -49,25 +56,28 @@ El proyecto está organizado como un **Monorepo** con `npm workspaces`:
 CV-AUTO/
 ├── backend/                  # Servidor API Express + TypeScript
 │   ├── src/
-│   │   ├── index.ts          # Rutas RESTful (/api/cv/*)
+│   │   ├── index.ts          # Rutas RESTful (/api/cv/* y /api/optimizer/*)
 │   │   ├── services/
 │   │   │   ├── parser/       # Extractor de texto (pdf-parse + mammoth)
-│   │   │   ├── scoring/      # Motor de evaluación ATS 2026
-│   │   │   ├── optimizer/    # Optimizador Google XYZ y Job Matcher
-│   │   │   ├── pdf/          # Compilador de PDF vectorial con Puppeteer
-│   │   │   └── word/         # Generador nativo .docx
-│   │   └── types/            # Esquema de datos canónico (ResumeData)
+│   │   │   ├── scoring/      # Motor de evaluación ATS 2026 de 5 dimensiones
+│   │   │   ├── optimizer/    # Motor heurístico Google XYZ, taxonomía y Job Matcher
+│   │   │   ├── pdf/          # Compilador de PDF vectorial con Chrome/Puppeteer
+│   │   │   └── word/         # Generador nativo de documentos .docx
+│   │   └── types/            # Esquema de datos canónico (ResumeData, AuditResult)
 │   ├── package.json
 │   └── tsconfig.json
 ├── frontend/                 # Aplicación Cliente React 18 + Vite + TS
 │   ├── src/
-│   │   ├── components/       # ResumeEditor, Scorecard, LiveCvPreview
-│   │   ├── App.tsx           # Dashboard principal con gestión de estado
+│   │   ├── components/       # ResumeEditor, Scorecard, LiveCvPreview,
+│   │   │                     # BulletOptimizerModal, AtsGuideModal, JobMatchModal
+│   │   ├── module/           # Contrato y adaptadores de integración (CvModuleContract)
+│   │   ├── App.tsx           # Dashboard principal con soporte para modo embebido
 │   │   └── index.css         # Sistema de diseño con variables CSS y tema oscuro
 │   ├── package.json
 │   └── vite.config.ts
-├── docs/                     # Auditorías e informes forenses
-│   └── ANALISIS_COMPARATIVO_CVS.md
+├── docs/                     # Guías y auditorías técnicas
+│   ├── GUIA_INTEGRACION_MODULO.md   # Manual de integración para plataformas padre
+│   └── ANALISIS_COMPARATIVO_CVS.md  # Informe forense comparativo de CVs reales
 ├── PROJECT_HISTORY.md        # Bitácora acumulativa de decisiones y ADRs
 ├── RECOVERY_STATE.md         # Checkpoint de resiliencia operativa
 ├── package.json              # Configuración raíz del Monorepo
