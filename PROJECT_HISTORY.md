@@ -149,5 +149,18 @@
   - Publicación y vinculación del repositorio público en GitHub mediante GitHub CLI: [https://github.com/MaciasSM2/cv-auto](https://github.com/MaciasSM2/cv-auto).
   - Creación y publicación de la Release oficial en GitHub: [https://github.com/MaciasSM2/cv-auto/releases/tag/v1.0.0](https://github.com/MaciasSM2/cv-auto/releases/tag/v1.0.0).
 
+---
+
+### [2026-10-06 23:55] - Hito 7: Auditoría Documental y Lanzamiento de la Versión v1.1.0
+* **Solicitud del Usuario:**
+  - Verificar toda la documentación del proyecto, actualizarla y publicar la nueva versión formal en GitHub.
+* **Acciones Ejecutadas:**
+  - **Actualización Semántica:** Incremento homogéneo de versión a `1.1.0` en `package.json` (raíz), `backend/package.json` y `frontend/package.json`.
+  - **Incorporación Documental:** Traslado del informe forense a `docs/ANALISIS_COMPARATIVO_CVS.md` como documentación permanente del repositorio.
+  - **Actualización de `README.md`:** Actualización de insignias a `v1.1.0`, integración de `docs/` en el árbol de arquitectura y detalle del registro de cambios (changelog).
+  - **Ajustes de `.gitignore`:** Exclusión de métricas de telemetría local de TokenPulse (`.tokenpulse/`).
+  - **Publicación en GitHub:** Creación del tag `v1.1.0`, push a la rama `main` y creación de la Release oficial en GitHub.
+
+
 
 

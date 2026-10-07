@@ -1,6 +1,6 @@
 {
   "name": "frontend",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "CV-AUTO Client: Live Editor, ATS Scorecard & Dual-Template PDF Generator",
   "private": true,
   "type": "module",
