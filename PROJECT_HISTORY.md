@@ -135,4 +135,19 @@
   2. Integración de `getSystemChromePath()` en `backend/src/services/pdf/generator.ts`, habilitando la generación de PDF con Google Chrome nativo de Windows.
   3. Verificación interactiva completa con subagente en navegador: importación de documento, verificación visual de la ausencia de duplicados y descarga exitosa de PDF.
 
+---
+
+### [2026-10-06 19:22] - Hito 6: Publicación en GitHub y Versionado Semántico Oficial v1.0.0
+* **Solicitud del Usuario:**
+  - Crear un repositorio público en GitHub para el proyecto y asignar el esquema de versiones adecuado.
+* **Acciones Ejecutadas:**
+  - Configuración de `.gitignore` integral para aislar dependencias `node_modules`, builds en `dist`, entornos y cachés.
+  - Creación de documentación maestro `README.md` con arquitectura, endpoints, insignias y guía de despliegue.
+  - Creación de archivo de licencia `LICENSE` (MIT) acreditado a Sebastián Macías Galeano.
+  - Inicialización del repositorio Git local en la rama `main` y primer commit semántico: `feat: initial release of CV-AUTO v1.0.0 - ATS 2026 AI Resume Auditor & Generator`.
+  - Creación y asignación de la etiqueta de versión oficial `v1.0.0`.
+  - Publicación y vinculación del repositorio público en GitHub mediante GitHub CLI: [https://github.com/MaciasSM2/cv-auto](https://github.com/MaciasSM2/cv-auto).
+  - Creación y publicación de la Release oficial en GitHub: [https://github.com/MaciasSM2/cv-auto/releases/tag/v1.0.0](https://github.com/MaciasSM2/cv-auto/releases/tag/v1.0.0).
+
+
 

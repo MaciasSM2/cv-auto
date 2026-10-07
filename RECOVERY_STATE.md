@@ -7,8 +7,10 @@
 
 ## 📍 1. Estado Actual del Sistema (Snapshot en Tiempo Real)
 
-* **Última Actualización:** 2026-10-06 19:10:00 (Hora Local)
-* **Fase Activa:** **Fase 5: Corrección de Duplicación en Perfil y Generación PDF Resuelta (Verificada en Vivo)**
+* **Última Actualización:** 2026-10-06 19:22:00 (Hora Local)
+* **Fase Activa:** **Fase 6 Completada: Publicación en GitHub y Versionado Semántico Oficial v1.0.0**
+* **Repositorio Público:** [https://github.com/MaciasSM2/cv-auto](https://github.com/MaciasSM2/cv-auto)
+* **Release Oficial:** [https://github.com/MaciasSM2/cv-auto/releases/tag/v1.0.0](https://github.com/MaciasSM2/cv-auto/releases/tag/v1.0.0)
 * **Estado de Integridad:** ✅ Servidores en ejecución (`localhost:3000` y `localhost:5000`).
 * **Rama de Trabajo:** `main` (Raíz del proyecto: `c:\Users\Sebastian Macias\Documents\0. Programacion\CV-AUTO`)
 
@@ -25,19 +27,19 @@
 6. Implementación de los 3 requerimientos iniciales (Subida PDF/Word con feedback, Menú dual PDF/Word .docx y Apartado de Fotografía para plantilla Canva).
 7. Diagnóstico Comparativo de Muestras Reales (`analisis_comparativo_cvs.md`).
 8. Robustecimiento del Extractor Heurístico (`extractor.ts`) para parsear Documentos A, B y C.
-9. **Corrección de Duplicación en Perfil Profesional:**
-   - Desacople de la zona de encabezado (`currentSection = 'header'`) para evitar que líneas de contacto iniciales caigan en `summary`.
-   - Función `cleanSummaryText`: purga el nombre completo, teléfonos, correos, links de LinkedIn/GitHub y ubicaciones si quedan adheridos al inicio del texto.
-10. **Reparación del Motor de Exportación PDF (Puppeteer en Windows):**
-   - Configuración de `getSystemChromePath()` en `generator.ts` para detectar automáticamente Google Chrome en `C:\Program Files\Google\Chrome\Application\chrome.exe` o Microsoft Edge.
-   - Eliminación del error 500 de descarga.
-11. **Verificación Automatizada en Navegador:**
-   - Carga exitosa del PDF en la plataforma web.
-   - Confirmación de perfil sin duplicados en el editor y en la vista previa.
-   - Descarga de PDF vectorial ejecutada sin alertas ni bloqueos.
+9. Corrección de duplicación de datos en el Perfil Profesional (desacople de cabecera y `cleanSummaryText`).
+10. Detección automática del motor de Google Chrome/Edge en Windows para descargas de PDF.
+11. **Configuración de Control de Versiones y Publicación en GitHub:**
+    - Creación de `.gitignore` robusto (aislando `node_modules`, `dist`, `.env` y archivos temporales).
+    - Creación de `README.md` técnico y completo con insignias, arquitectura, guía de instalación y endpoints.
+    - Creación de archivo de licencia `LICENSE` (MIT).
+    - Inicialización de Git en la rama `main` y primer commit semántico (`feat: initial release of CV-AUTO v1.0.0`).
+    - Etiquetado de versión formal `v1.0.0`.
+    - Creación del repositorio público mediante GitHub CLI en `https://github.com/MaciasSM2/cv-auto`.
+    - Publicación de la Release oficial `v1.0.0` con notas de versión.
 
 ### ⏳ Acción en Curso Inmediata (Current Step)
-* Confirmar con el usuario el resultado de las correcciones y definir el siguiente paso (Optimización de viñetas Google XYZ o Job Matcher).
+* Informar al usuario sobre la publicación del repositorio y los enlaces oficiales de acceso.
 
 ---
 
